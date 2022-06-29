@@ -54,7 +54,6 @@ class PassiveDataRepository @Inject constructor(
                 .method("POST", body)
                 .build()
             val response = client.newCall(request).execute()
-
     }
 
     val passiveDataEnabled: Flow<Boolean> = dataStore.data.map { prefs ->
@@ -68,12 +67,9 @@ class PassiveDataRepository @Inject constructor(
             Log.d(TAG, "DAILY DISTANCE: "+ prefs[LATEST_DAILY_DISTANCE])
             Log.d(TAG, "DAILY_STEPS: "+ prefs[LATEST_DAILY_STEPS])
             Log.d(TAG, "HEART_RATE_BPM: "+ prefs[LATEST_HEART_RATE])
-            Log.d(TAG, "SUM_PULSACIONES: "+ prefs[SUM_PULSACIONES])
-            Log.d(TAG, "NUM: "+ prefs[NUM])
             Log.d(TAG, "UPDATE: "+ prefs[LATEST_UPDATE])
             Log.d(TAG, "SET PASIVE DATA ENABLED")
-            prefs[SUM_PULSACIONES]=0.0
-            prefs[NUM]=0.0
+
         }
     }
 
@@ -84,15 +80,12 @@ class PassiveDataRepository @Inject constructor(
             Log.d(TAG, "DAILY DISTANCE: "+ prefs[LATEST_DAILY_DISTANCE])
             Log.d(TAG, "DAILY_STEPS: "+ prefs[LATEST_DAILY_STEPS])
             Log.d(TAG, "HEART_RATE_BPM: "+ prefs[LATEST_HEART_RATE])
-            Log.d(TAG, "SUM_PULSACIONES: "+ prefs[SUM_PULSACIONES])
-            Log.d(TAG, "NUM: "+ prefs[NUM])
             Log.d(TAG, "UPDATE: "+ prefs[LATEST_UPDATE])
 
             var NumeroPasos=prefs[LATEST_DAILY_STEPS]
-            var Pulsaciones=prefs[SUM_PULSACIONES]
+            var Pulsaciones=prefs[LATEST_HEART_RATE]
             var Distancia=prefs[LATEST_DAILY_DISTANCE]
             var Calorias=prefs[LATEST_DAILY_CALORIES]
-            var NumeroPulsaciones=prefs[NUM]
             if(NumeroPasos==null){
                 NumeroPasos=0.0
             }
@@ -105,26 +98,20 @@ class PassiveDataRepository @Inject constructor(
             if(Calorias==null){
                 Calorias=0.0
             }
-            if(NumeroPulsaciones==null){
-                NumeroPulsaciones=0.0
-            }
 
             val current = LocalDateTime.now()
             val latestUpdateString=prefs[LATEST_UPDATE]
-            var latestUpdatePlus5=current.minusHours(1)
+            var latestUpdatePlus10=current.minusHours(1)
 
             try {
                 val latestUpdate=LocalDateTime.parse(latestUpdateString)
-                latestUpdatePlus5=latestUpdate.plusMinutes(10)
+                latestUpdatePlus10=latestUpdate.plusMinutes(10)
             }catch (e: Exception){}
 
-            if(current>latestUpdatePlus5) {
+            if(current>latestUpdatePlus10) {
                 try {
-                    var PulsacionesMedia=Pulsaciones/NumeroPulsaciones
-                    SendData(NumeroPasos, PulsacionesMedia, Calorias, Distancia)
+                    SendData(NumeroPasos, Pulsaciones, Calorias, Distancia)
                     prefs[LATEST_UPDATE]=current.toString()
-                    prefs[NUM]=0.0
-                    prefs[SUM_PULSACIONES]=0.0
                 }catch (e: Exception){ }
             }
         }
@@ -138,14 +125,6 @@ class PassiveDataRepository @Inject constructor(
         dataStore.edit { prefs ->
             if(heartRate!=0.0){
                 prefs[LATEST_HEART_RATE]=heartRate
-                prefs[SUM_PULSACIONES]=prefs[SUM_PULSACIONES]!!+heartRate
-                prefs[NUM]= prefs[NUM]!! +1
-
-                if(prefs[NUM]!! >500){
-                    prefs[SUM_PULSACIONES]= prefs[SUM_PULSACIONES]!! / prefs[NUM]!!
-                    prefs[NUM]=1.0
-
-                }
             }
         }
     }
@@ -193,7 +172,5 @@ class PassiveDataRepository @Inject constructor(
         private val LATEST_DAILY_STEPS = doublePreferencesKey("latest_daily_steps")
         private val LATEST_HEART_RATE = doublePreferencesKey("latest_heart_rate")
         private val LATEST_UPDATE= stringPreferencesKey("latest_update")
-        private val NUM= doublePreferencesKey("NUM")
-        private val SUM_PULSACIONES= doublePreferencesKey("MEDIA_PULSACIONES")
     }
 }

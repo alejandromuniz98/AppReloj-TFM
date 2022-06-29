@@ -35,7 +35,6 @@ class PassiveDataReceiver : BroadcastReceiver() {
     lateinit var repository: PassiveDataRepository
 
     override fun onReceive(context: Context, intent: Intent) {
-
         Log.d(TAG, "Received new INFO")
         if (intent?.action != PassiveMonitoringUpdate.ACTION_DATA) {
             return
@@ -43,7 +42,6 @@ class PassiveDataReceiver : BroadcastReceiver() {
         val state = PassiveMonitoringUpdate.fromIntent(intent) ?: return
 
         val dataPoints = state.dataPoints
-
 
        runBlocking {
            for(point in dataPoints){
@@ -62,10 +60,7 @@ class PassiveDataReceiver : BroadcastReceiver() {
                if(type==DataType.HEART_RATE_BPM){
                    repository.storeLatestHeartRate(point.value.asDouble())
                }
-
-
            }
-
         }
     }
 }

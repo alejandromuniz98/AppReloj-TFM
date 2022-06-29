@@ -34,27 +34,15 @@ class HealthServicesManager @Inject constructor(
     private val passiveMonitoringClient = healthServicesClient.passiveMonitoringClient
     private val dataTypes = setOf(DataType.DAILY_CALORIES,
         DataType.DAILY_DISTANCE,
-        DataType.DAILY_FLOORS,
         DataType.DAILY_STEPS,
-        DataType.DISTANCE,
-        DataType.FLOORS,
-        DataType.HEART_RATE_BPM,
-        DataType.STEPS,
-        DataType.TOTAL_CALORIES,
-        DataType.WALKING_STEPS)
+        DataType.HEART_RATE_BPM)
     suspend fun hasHeartRateCapability(): Boolean {
         val capabilities = passiveMonitoringClient.capabilities.await()
         return (
                 DataType.DAILY_CALORIES in capabilities.supportedDataTypesPassiveMonitoring &&
                         DataType.DAILY_DISTANCE in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.DAILY_FLOORS in capabilities.supportedDataTypesPassiveMonitoring &&
                         DataType.DAILY_STEPS in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.DISTANCE in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.FLOORS in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.HEART_RATE_BPM in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.STEPS in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.TOTAL_CALORIES in capabilities.supportedDataTypesPassiveMonitoring &&
-                        DataType.WALKING_STEPS in capabilities.supportedDataTypesPassiveMonitoring
+                        DataType.HEART_RATE_BPM in capabilities.supportedDataTypesPassiveMonitoring
                         )
     }
 
