@@ -1,19 +1,3 @@
-/*
- * Copyright 2021 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.passivedata
 
 import android.util.Log
@@ -37,7 +21,7 @@ class PassiveDataRepository @Inject constructor(
 ) {
 
     suspend fun SendData(NumeroPasos:Double,Pulsaciones:Double,Calorias:Double,Distancia:Double){
-            Log.d(TAG, "Sending INFO")
+            Log.d(TAG, "Sending data to API")
             var client: OkHttpClient = OkHttpClient();
             val mediaType: MediaType? = "application/x-www-form-urlencoded".toMediaType()
             val body = RequestBody.create(
@@ -63,24 +47,12 @@ class PassiveDataRepository @Inject constructor(
     suspend fun setPassiveDataEnabled(enabled: Boolean) {
         dataStore.edit { prefs ->
             prefs[PASSIVE_DATA_ENABLED] = enabled
-            Log.d(TAG, "DAILY_CALORIES: "+ prefs[LATEST_DAILY_CALORIES])
-            Log.d(TAG, "DAILY DISTANCE: "+ prefs[LATEST_DAILY_DISTANCE])
-            Log.d(TAG, "DAILY_STEPS: "+ prefs[LATEST_DAILY_STEPS])
-            Log.d(TAG, "HEART_RATE_BPM: "+ prefs[LATEST_HEART_RATE])
-            Log.d(TAG, "UPDATE: "+ prefs[LATEST_UPDATE])
-            Log.d(TAG, "SET PASIVE DATA ENABLED")
-
         }
     }
 
     suspend fun storeLatestDailyCalories(DailyCalories: Double) {
         dataStore.edit { prefs ->
             prefs[LATEST_DAILY_CALORIES] = DailyCalories
-            Log.d(TAG, "DAILY_CALORIES: "+ prefs[LATEST_DAILY_CALORIES])
-            Log.d(TAG, "DAILY DISTANCE: "+ prefs[LATEST_DAILY_DISTANCE])
-            Log.d(TAG, "DAILY_STEPS: "+ prefs[LATEST_DAILY_STEPS])
-            Log.d(TAG, "HEART_RATE_BPM: "+ prefs[LATEST_HEART_RATE])
-            Log.d(TAG, "UPDATE: "+ prefs[LATEST_UPDATE])
 
             var NumeroPasos=prefs[LATEST_DAILY_STEPS]
             var Pulsaciones=prefs[LATEST_HEART_RATE]

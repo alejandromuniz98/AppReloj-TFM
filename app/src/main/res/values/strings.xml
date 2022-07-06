@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name">Passive Data Sample</string>
+    <string name="app_name">Mi Actividad</string>
     <string name="enable">Enable</string>
     <string name="last_measured">Last measured:</string>
     <string name="not_available">Not available on this device</string>

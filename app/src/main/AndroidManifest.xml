@@ -73,7 +73,7 @@
 
 
         <receiver
-            android:name=".StartupReceiver"
+            android:name="com.example.passivedata.StartupReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
